@@ -74,9 +74,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 #define WIN_MASK (1 << 2)
 
-// ヘルパーマクロ
+// ヘルパーマクロ: 単押し設定（Shiftが押されている時は発動させない）
 #define KO_SINGLE(key, repl) ko_make_with_layers_and_negmods(0, key, repl, WIN_MASK, MOD_MASK_SHIFT)
-#define KO_SHIFT(key, repl)  ko_make_with_layers(MOD_MASK_SHIFT, key, repl, WIN_MASK)
+
+// ヘルパーマクロ: Shift設定
+// ★修正: 他の修飾キー(Ctrl, Alt, Gui)が押されている時は発動させない設定を追加
+#define KO_SHIFT(key, repl)  ko_make_with_layers_and_negmods(MOD_MASK_SHIFT, key, repl, WIN_MASK, (MOD_MASK_CTRL | MOD_MASK_ALT | MOD_MASK_GUI))
 
 // 1. Bracket Left [ (Keymap: KC_RBRC)
 const key_override_t lbrc_single = KO_SINGLE(KC_RBRC, KC_RBRC);         // [ 
@@ -84,12 +87,11 @@ const key_override_t lbrc_shift  = KO_SHIFT(KC_RBRC, S(KC_RBRC));       // {
 
 // 2. Bracket Right ] (Keymap: KC_BSLS)
 const key_override_t rbrc_single = KO_SINGLE(KC_BSLS, KC_BSLS);         // ]
-const key_override_t rbrc_shift  = KO_SHIFT(KC_BSLS, S(KC_BSLS));       // } (修正: |から}に変更)
+const key_override_t rbrc_shift  = KO_SHIFT(KC_BSLS, S(KC_BSLS));       // }
 
 // 3. Backslash \ (Keymap: KC_INT1)
-// 単押しは標準で \ が出るのでOverride不要だが、明示的に記述も可
-const key_override_t bsls_single = KO_SINGLE(KC_INT1, KC_INT1);         // (Backslash) 
-const key_override_t bsls_shift  = KO_SHIFT(KC_INT1, S(KC_INT3));       // | (修正: _から|に変更)
+const key_override_t bsls_single = KO_SINGLE(KC_INT1, KC_INT1);         // (Backslash)
+const key_override_t bsls_shift  = KO_SHIFT(KC_INT1, S(KC_INT3));       // |
 
 // 4. Equal = (+)
 const key_override_t eql_single  = KO_SINGLE(KC_EQL, S(KC_MINS));       // = 
